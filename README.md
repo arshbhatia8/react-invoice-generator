@@ -11,7 +11,7 @@ https://invoice-generator-byarsh.vercel.app/
 ### Installation
 
 ```
-git clone https://github.com/arshbhatia8/react-invoice-generator
+git clone https://github.com/arshbhatia8/react-invoice-generator.git
 
 npm install
 
