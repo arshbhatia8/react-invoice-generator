@@ -86,3 +86,15 @@ hr {
   -ms-user-select: none;
   user-select: none;
 }
+/* Default styles */
+.invoice-input {
+  margin-top: 5px;
+  max-width: 90px;
+}
+
+/* Media query for medium and above screens */
+@media (min-width: 768px) {
+  .invoice-input {
+    margin-top: 0;
+  }
+}
