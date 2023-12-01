@@ -46,48 +46,55 @@ class InvoiceForm extends React.Component {
   componentDidMount(prevProps) {
     this.handleCalculateTotal()
   }
-  handleRowDel(items) {
-    var index = this.state.items.indexOf(items);
-    this.state.items.splice(index, 1);
-    this.setState(this.state.items);
-  };
+  handleRowDel(index) {
+    const updatedItems = [...this.state.items];
+    updatedItems.splice(index, 1);
+    this.setState({ items: updatedItems }, () => {
+      this.handleCalculateTotal();
+    });
+  }
+  
   handleAddEvent(evt) {
-    var id = (+ new Date() + Math.floor(Math.random() * 999999)).toString(36);
-    var items = {
+    evt.preventDefault();
+    const id = (+new Date() + Math.floor(Math.random() * 999999)).toString(36);
+    const newItem = {
       id: id,
       name: '',
       price: '1.00',
       description: '',
       quantity: 1
-    }
-    this.state.items.push(items);
-    this.setState(this.state.items);
+    };
+  
+    // Create a new array with the new item
+    const updatedItems = [...this.state.items, newItem];
+  
+    // Update the state with the new array
+    this.setState({ items: updatedItems }, () => {
+      this.handleCalculateTotal();
+    });
   }
+  
   handleCalculateTotal() {
     var items = this.state.items;
     var subTotal = 0;
-
-    items.map(function(items) {
-      subTotal = parseFloat(subTotal + (parseFloat(items.price).toFixed(2) * parseInt(items.quantity))).toFixed(2)
+  
+    items.forEach((item) => {
+      subTotal += parseFloat((item.price * item.quantity).toFixed(2));
     });
-
-    this.setState({
-      subTotal: parseFloat(subTotal).toFixed(2)
-    }, () => {
+  
+    this.setState({ subTotal: subTotal.toFixed(2) }, () => {
+      const taxAmount = parseFloat((subTotal * (this.state.taxRate / 100)).toFixed(2));
+      const discountAmount = parseFloat((subTotal * (this.state.discountRate / 100)).toFixed(2));
+      const total = parseFloat(subTotal - discountAmount + taxAmount).toFixed(2);
+  
       this.setState({
-        taxAmmount: parseFloat(parseFloat(subTotal) * (this.state.taxRate / 100)).toFixed(2)
-      }, () => {
-        this.setState({
-          discountAmmount: parseFloat(parseFloat(subTotal) * (this.state.discountRate / 100)).toFixed(2)
-        }, () => {
-          this.setState({
-            total: ((subTotal - this.state.discountAmmount) + parseFloat(this.state.taxAmmount))
-          });
-        });
+        taxAmount: taxAmount,
+        discountAmount: discountAmount,
+        total: total
       });
     });
-
-  };
+  }
+  
   onItemizedItemEdit(evt) {
     var item = {
       id: evt.target.id,
@@ -126,7 +133,7 @@ class InvoiceForm extends React.Component {
       <Row>
         <Col md={8} lg={9}>
           <Card className="p-4 p-xl-5 my-3 my-xl-4">
-            <div className="d-flex flex-row align-items-start justify-content-between mb-3">
+            <div className="d-flex flex-column flex-md-row align-items-start justify-content-between mb-3">
               <div class="d-flex flex-column">
                 <div className="d-flex flex-column">
                   <div class="mb-2">
@@ -134,18 +141,22 @@ class InvoiceForm extends React.Component {
                     <span className="current-date">{new Date().toLocaleDateString()}</span>
                   </div>
                 </div>
-                <div className="d-flex flex-row align-items-center">
+                <div className="d-flex flex-row align-items-center mb-1">
                   <span className="fw-bold d-block me-2">Due&nbsp;Date:</span>
                   <Form.Control type="date" value={this.state.dateOfIssue} name={"dateOfIssue"} onChange={(event) => this.editField(event)} style={{
                       maxWidth: '150px'
                     }} required="required"/>
                 </div>
               </div>
-              <div className="d-flex flex-row align-items-center">
+              <div className="d-flex flex-row align-items-center ">
                 <span className="fw-bold me-2">Invoice&nbsp;Number:&nbsp;</span>
-                <Form.Control type="number" value={this.state.invoiceNumber} name={"invoiceNumber"} onChange={(event) => this.editField(event)} min="1" style={{
-                    maxWidth: '70px'
-                  }} required="required"/>
+                <Form.Control  type="number" value={this.state.invoiceNumber} name={"invoiceNumber"} onChange={(event) => this.editField(event)} min="1" style={{
+                    // marginTop: '5px',
+                    maxWidth: '90px'
+                  }} required="required"
+                  className="invoice-input"
+                  />
+                  
               </div>
             </div>
             <hr className="my-4"/>
