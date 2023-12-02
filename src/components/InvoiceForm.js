@@ -88,12 +88,13 @@ class InvoiceForm extends React.Component {
       const total = parseFloat(subTotal - discountAmount + taxAmount).toFixed(2);
   
       this.setState({
-        taxAmount: taxAmount,
-        discountAmount: discountAmount,
+        taxAmmount: taxAmount,  // Fix the property name here
+        discountAmmount: discountAmount,  // Fix the property name here
         total: total
       });
     });
   }
+  
   
   onItemizedItemEdit(evt) {
     var item = {
@@ -175,40 +176,37 @@ class InvoiceForm extends React.Component {
               </Col>
             </Row>
             <InvoiceItem onItemizedItemEdit={this.onItemizedItemEdit.bind(this)} onRowAdd={this.handleAddEvent.bind(this)} onRowDel={this.handleRowDel.bind(this)} currency={this.state.currency} items={this.state.items}/>
-            <Row className="mt-4 justify-content-end">
-              <Col lg={6}>
-                <div className="d-flex flex-row align-items-start justify-content-between">
-                  <span className="fw-bold">Subtotal:
-                  </span>
-                  <span>{this.state.currency}
-                    {this.state.subTotal}</span>
-                </div>
-                <div className="d-flex flex-row align-items-start justify-content-between mt-2">
-                  <span className="fw-bold">Discount:</span>
-                  <span>
-                    <span className="small ">({this.state.discountRate || 0}%)</span>
-                    {this.state.currency}
-                    {this.state.discountAmmount || 0}</span>
-                </div>
-                <div className="d-flex flex-row align-items-start justify-content-between mt-2">
-                  <span className="fw-bold">Tax:
-                  </span>
-                  <span>
-                    <span className="small ">({this.state.taxRate || 0}%)</span>
-                    {this.state.currency}
-                    {this.state.taxAmmount || 0}</span>
-                </div>
-                <hr/>
-                <div className="d-flex flex-row align-items-start justify-content-between" style={{
-                    fontSize: '1.125rem'
-                  }}>
-                  <span className="fw-bold">Total:
-                  </span>
-                  <span className="fw-bold">{this.state.currency}
-                    {this.state.total || 0}</span>
-                </div>
-              </Col>
-            </Row>
+
+
+<Row className="mt-4 justify-content-end">
+  <Col lg={6}>
+    <div className="d-flex flex-row align-items-start justify-content-between">
+      <span className="fw-bold">Subtotal:</span>
+      <span>{this.state.currency}{this.state.subTotal}</span>
+    </div>
+    <div className="d-flex flex-row align-items-start justify-content-between mt-2">
+      <span className="fw-bold">Discount:</span>
+      <span>
+        <span className="small">({this.state.discountRate || 0}%)</span>
+        {this.state.currency}{this.state.discountAmmount || 0}
+      </span>
+    </div>
+    <div className="d-flex flex-row align-items-start justify-content-between mt-2">
+      <span className="fw-bold">Tax:</span>
+      <span>
+        <span className="small">({this.state.taxRate || 0}%)</span>
+        {this.state.currency}{this.state.taxAmmount || 0}
+      </span>
+    </div>
+    <hr />
+    <div className="d-flex flex-row align-items-start justify-content-between" style={{ fontSize: '1.125rem' }}>
+      <span className="fw-bold">Total:</span>
+      <span className="fw-bold">{this.state.currency}{this.state.total || 0}</span>
+    </div>
+  </Col>
+</Row>
+
+
             <hr className="my-4"/>
             <Form.Label className="fw-bold">Notes:</Form.Label>
             <Form.Control placeholder="Thank you for doing business with us!" name="notes" value={this.state.notes} onChange={(event) => this.editField(event)} as="textarea" className="my-2" rows={1}/>
